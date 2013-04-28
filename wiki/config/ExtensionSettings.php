@@ -41,3 +41,9 @@ require_once( "$IP/extensions/TorBlock/TorBlock.php" );
 require_once( "$IP/extensions/PostEdit/PostEdit.php" );
 require_once( "$IP/extensions/AddThis/AddThis.php" );
 $wgAddThispubid = 'ra-517d2fef778f35ed';
+if (isset($wikiconf['addThisSB'])) {
+	$wgAddThisSBServ = $wikiconf['addThisSB'];
+}
+if (isset($wikiconf['addThisH'])) {
+	$wgAddThisHServ = $wikiconf['addThisH'];
+}
