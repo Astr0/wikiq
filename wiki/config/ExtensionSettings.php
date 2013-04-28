@@ -59,4 +59,4 @@ $wgExtensionFunctions[] = function() {
         $GLOBALS['wgUploadNavigationUrl'] = SpecialPage::getTitleFor( 'UploadWizard' )->getLocalURL();
         return true;
 };
-$wgUploadWizardConfig['altUploadForm'] = 'Special:Upload';
+#$wgUploadWizardConfig['altUploadForm'] = 'Special:Upload';
