@@ -110,3 +110,6 @@ $wgUseAjax = true;
 
 # To remove various skins from the User Preferences choices
 $wgSkipSkins = array("chick", "cologneblue", "myskin", "nostalgia", "simple", "standard", "modern", "monobook");
+
+// Needed to make UploadWizard work in IE, see bug 39877
+$wgApiFrameOptions = 'SAMEORIGIN';
