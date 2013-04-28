@@ -10,57 +10,7 @@ $wikiSubdomains["ua"] = array(
 	"sitename" => "ВікіQ",
 	"server" => "http://ua.wikiq.org",
 	"db" => "wiki_ua",
-	"language" => "uk",
-	# Sidebar settings
-	"addThisSB" => array(
-		array(
-			'service' => 'vk',
-		),
-		array(
-			'service' => 'odnoklassniki_ru',
-		),		
-		array(
-			'service' => 'facebook',
-		),
-		array(
-			'service' => 'twitter',
-		),
-		array(
-			'service' => 'google_plusone',
-			'attribs' => 'g:plusone:count="false" style="margin-top:1px;"',
-		),
-		array(
-			'service' => 'email',
-		),
-	),
-	# Toolbar settings
-	"addThisH" => array(
-		array(
-			'service' => 'vk',
-		),
-		array(
-			'service' => 'odnoklassniki_ru',
-		),
-		array(
-			'service' => 'facebook',
-		),
-		array(
-			'service' => 'twitter',
-		),
-		array(
-			'service' => 'google_plusone',
-			'attribs' => 'g:plusone:count="false" style="margin-top:1px;"',
-		),
-		array(
-			'service' => 'mymailru',
-		),	
-		array(
-			'service' => 'moemesto',
-		),				
-		array(
-			'service' => 'email',
-		),
-	),
+	"language" => "uk"
 );
 
 $wikiSubdomains["ru"] = array(
@@ -70,6 +20,9 @@ $wikiSubdomains["ru"] = array(
 	"language" => "ru",
 	# Sidebar settings
 	"addThisSB" => array(
+		array(
+			'service' => 'compact',
+		),
 		array(
 			'service' => 'vk',
 		),
