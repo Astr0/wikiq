@@ -21,7 +21,8 @@ mw.LanguageUpWiz = {
 	 * TODO make this more configurable.
 	 */
 	languages: ( function () {
-		if (!UploadWizardConfig) {
+		var uploadConfig = mw.config.get( 'UploadWizardConfig' );
+		if (!uploadConfig) {
 			return [
 				{ lang: "de",           text: "Deutsch" },
 				{ lang: "en",           text: "English" },
@@ -38,7 +39,7 @@ mw.LanguageUpWiz = {
 			];
 		}
 		
-		var langs = UploadWizardConfig.uwLanguages;
+		var langs = uploadConfig.uwLanguages;
 		var list = [];
 		for ( var langcode in langs ) {
 			list.push( { code: langcode, text: langs[langcode] } );
