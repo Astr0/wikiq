@@ -10,7 +10,54 @@ $wikiSubdomains["ua"] = array(
 	"sitename" => "ВікіQ",
 	"server" => "http://ua.wikiq.org",
 	"db" => "wiki_ua",
-	"language" => "uk"
+	"language" => "uk",
+	# Sidebar settings
+	"addThisSB" => array(
+		array(
+			'service' => 'compact',
+		),
+		array(
+			'service' => 'vk',
+		),
+		array(
+			'service' => 'odnoklassniki_ru',
+		),		
+		array(
+			'service' => 'facebook',
+		),
+		array(
+			'service' => 'google_plusone',
+			'attribs' => 'g:plusone:count="false" style="margin-top:1px;"',
+		),
+	),
+	# Toolbar settings
+	"addThisH" => array(
+		array(
+			'service' => 'vk',
+		),
+		array(
+			'service' => 'odnoklassniki_ru',
+		),
+		array(
+			'service' => 'facebook',
+		),
+		array(
+			'service' => 'twitter',
+		),
+		array(
+			'service' => 'google_plusone',
+			'attribs' => 'g:plusone:count="false" style="margin-top:1px;"',
+		),
+		array(
+			'service' => 'mymailru',
+		),	
+		array(
+			'service' => 'moemesto',
+		),				
+		array(
+			'service' => 'email',
+		),
+	),	
 );
 
 $wikiSubdomains["ru"] = array(
