@@ -25,3 +25,19 @@ require_once( "$IP/extensions/Interwiki/Interwiki.php" );
 require_once( "$IP/extensions/TemplateSandbox/TemplateSandbox.php" );
 require_once( "$IP/extensions/AntiSpoof/AntiSpoof.php" );
 $wgSharedTables[] = 'spoofuser';
+require_once( "$IP/extensions/AntiBot/AntiBot.php" );
+require_once( "$IP/extensions/SimpleAntiSpam/SimpleAntiSpam.php" );
+require_once( "$IP/extensions/SpamBlacklist/SpamBlacklist.php" );
+require_once( "$IP/extensions/TitleBlacklist/TitleBlacklist.php" );
+// Apply to all, not just anonymous users.
+$wgGroupPermissions['sysop']['tboverride'] = false; 
+$wgTitleBlacklistSources = array(
+  array(
+    'type' => TBLSRC_LOCALPAGE,
+    'src'  => 'MediaWiki:Titleblacklist'
+  )
+);
+require_once( "$IP/extensions/TorBlock/TorBlock.php" );
+require_once( "$IP/extensions/PostEdit/PostEdit.php" );
+require_once( "$IP/extensions/AddThis/AddThis.php" );
+$wgAddThispubid = 'ra-517d2fef778f35ed';

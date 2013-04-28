@@ -1,0 +1,11 @@
+PostEdit
+========
+
+MediaWiki extension to display a confirmation message upon
+successful edit. You can view a mock-up of the UI here:
+
+	https://commons.wikimedia.org/wiki/File:PEF-1-Cropped.png
+
+To install, add the following to `LocalSettings.php`:
+
+	require_once( "$IP/extensions/PostEdit/PostEdit.php" );
