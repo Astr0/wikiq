@@ -47,3 +47,8 @@ if (isset($wikiconf['addThisSB'])) {
 if (isset($wikiconf['addThisH'])) {
 	$wgAddThisHServ = $wikiconf['addThisH'];
 }
+
+require_once( "$IP/extensions/ContactPage/ContactPage.php" );
+$wgContactUser = 'Wiki';
+$wgContactSenderName = 'Contact Form on ' . $wgSitename;
+$wgCaptchaTriggers['contactpage'] = true;
