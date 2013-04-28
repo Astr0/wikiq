@@ -15,21 +15,25 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	exit;
 }
 
-## Uncomment this to disable output compression
-# $wgDisableOutputCompression = true;
+require_once( "$IP/config/WikiSubdomains.php" );
 
-$wgSitename      = "WikiQPool";
+if ( preg_match( '/^(.*)\.yourdomain.net$/', $server, $matches ) ) {
+	 $wikiconf = $wikiSubdomains[strtolower($matches[1])];	 
+} 
 
-## The protocol and server name to use in fully-qualified URLs
-$wgServer           = "http://pool.wikiq.org";
-
-## Database settings
-$wgDBname           = "wiki_pool";
-
-# Site language code, should be one of the list in ./languages/Names.php
-$wgLanguageCode = "en";
-
-
+if (isset($wikiconf)) {
+	# Site name
+	$wgSitename = $wikiconf["sitename"];
+	# The protocol and server name to use in fully-qualified URLs
+	$wgServer = $wikiconf["server"];
+	# Database name
+	$wgDBname = $wikiconf["db"];
+	# Site language code, should be one of the list in ./languages/Names.php
+	$wgLanguageCode = $wikiconf["language"];
+} else {
+     die( "Invalid host name, can't determine wiki name" );
+     // You could also redirect to a nicer "No such wiki" page.
+}
 
 # Shared configuration
 require_once( "$IP/config/PrivateSettings.php" );
