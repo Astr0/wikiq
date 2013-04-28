@@ -33,14 +33,8 @@ $wikiSubdomains["ru"] = array(
 			'service' => 'facebook',
 		),
 		array(
-			'service' => 'twitter',
-		),
-		array(
 			'service' => 'google_plusone',
 			'attribs' => 'g:plusone:count="false" style="margin-top:1px;"',
-		),
-		array(
-			'service' => 'email',
 		),
 	),
 	# Toolbar settings
