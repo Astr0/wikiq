@@ -20,7 +20,7 @@ $specialPageAliases['ar'] = array(
 	'UploadCampaign' => array( 'حملة_الرفع' ),
 );
 
-/** Assamese (অসমীয়া) */
+/** Assamese (অসমীয়া) */
 $specialPageAliases['as'] = array(
 	'UploadWizard' => array( 'আপল’ড_প্ৰক্ৰিয়া' ),
 );
@@ -30,6 +30,11 @@ $specialPageAliases['ba'] = array(
 	'UploadWizard' => array( 'UploadWizard' ),
 	'UploadCampaigns' => array( 'UploadCampaigns' ),
 	'UploadCampaign' => array( 'UploadCampaign' ),
+);
+
+/** буряад (буряад) */
+$specialPageAliases['bxr'] = array(
+	'UploadWizard' => array( 'Ашаалха_Зэмсэг' ),
 );
 
 /** Danish (dansk) */
@@ -97,6 +102,8 @@ $specialPageAliases['id'] = array(
 /** Italian (italiano) */
 $specialPageAliases['it'] = array(
 	'UploadWizard' => array( 'CaricamentoGuidato' ),
+	'UploadCampaigns' => array( 'CampagneCaricamento' ),
+	'UploadCampaign' => array( 'CampagnaCaricamento' ),
 );
 
 /** Japanese (日本語) */
@@ -130,14 +137,14 @@ $specialPageAliases['ml'] = array(
 	'UploadCampaign' => array( 'അപ്‌ലോഡ്‌മേള' ),
 );
 
-/** Norwegian Bokmål (norsk (bokmål)‎) */
+/** Norwegian Bokmål (norsk bokmål) */
 $specialPageAliases['nb'] = array(
 	'UploadWizard' => array( 'Opplastingsveiviser' ),
 	'UploadCampaigns' => array( 'Opplastingskampanjer' ),
 	'UploadCampaign' => array( 'Opplastingskampanje' ),
 );
 
-/** Nedersaksisch (Nedersaksisch) */
+/** Low Saxon (Netherlands) (Nedersaksies) */
 $specialPageAliases['nds-nl'] = array(
 	'UploadWizard' => array( 'Opstuurhulpe' ),
 	'UploadCampaigns' => array( 'Kampanjes_opsturen' ),
@@ -151,11 +158,23 @@ $specialPageAliases['nl'] = array(
 	'UploadCampaign' => array( 'Uploadcampagne' ),
 );
 
+/** Punjabi (ਪੰਜਾਬੀ) */
+$specialPageAliases['pa'] = array(
+	'UploadWizard' => array( 'ਅੱਪਲੋਡ_ਵਿਜ਼ਾਰਡ' ),
+);
+
 /** Russian (русский) */
 $specialPageAliases['ru'] = array(
 	'UploadWizard' => array( 'Мастер_загрузки' ),
 	'UploadCampaigns' => array( 'Кампании_по_загрузке' ),
 	'UploadCampaign' => array( 'Кампания_по_загрузке' ),
+);
+
+/** Sicilian (sicilianu) */
+$specialPageAliases['scn'] = array(
+	'UploadWizard' => array( 'CaricamentoGuidato' ),
+	'UploadCampaigns' => array( 'CampagneCaricamento' ),
+	'UploadCampaign' => array( 'CampagnaCaricamento' ),
 );
 
 /** Sinhala (සිංහල) */
@@ -178,6 +197,8 @@ $specialPageAliases['uk'] = array(
 /** Vietnamese (Tiếng Việt) */
 $specialPageAliases['vi'] = array(
 	'UploadWizard' => array( 'Thuật_sĩ_tải_lên' ),
+	'UploadCampaigns' => array( 'Danh_sách_chiến_dịch_tải_lên' ),
+	'UploadCampaign' => array( 'Chiến_dịch_tải_lên' ),
 );
 
 /** Cantonese (粵語) */
@@ -188,4 +209,11 @@ $specialPageAliases['yue'] = array(
 /** Simplified Chinese (中文（简体）‎) */
 $specialPageAliases['zh-hans'] = array(
 	'UploadWizard' => array( '上传向导', '上传精灵' ),
+);
+
+/** Traditional Chinese (中文（繁體）‎) */
+$specialPageAliases['zh-hant'] = array(
+	'UploadWizard' => array( '上載精靈' ),
+	'UploadCampaigns' => array( '上載多個計劃' ),
+	'UploadCampaign' => array( '上載計劃' ),
 );

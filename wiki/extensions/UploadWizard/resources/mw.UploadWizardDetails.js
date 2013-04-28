@@ -34,7 +34,7 @@ mw.UploadWizardDetails = function( upload, api, containerDiv ) {
 	_this.descriptionsDiv = $j( '<div class="mwe-upwiz-details-descriptions"></div>' );
 
 	_this.descriptionAdder = $j( '<a class="mwe-upwiz-more-options"/>' )
-					.html( gM( 'mwe-upwiz-desc-add-0' ) )
+					.html( mw.msg( 'mwe-upwiz-desc-add-0' ) )
 					.click( function( ) { _this.addDescription(); } );
 
 	var descriptionAdderDiv =
@@ -92,7 +92,7 @@ mw.UploadWizardDetails = function( upload, api, containerDiv ) {
 	_this.copyrightInfoFieldset = $j('<fieldset class="mwe-fieldset mwe-upwiz-copyright-info"></fieldset>')
 		.hide()
 		.append(
-			$j( '<legend class="mwe-legend">' ).append( gM( 'mwe-upwiz-copyright-info' ) ),
+			$j( '<legend class="mwe-legend">' ).append( mw.msg( 'mwe-upwiz-copyright-info' ) ),
 			_this.deedDiv
 		);
 
@@ -105,7 +105,7 @@ mw.UploadWizardDetails = function( upload, api, containerDiv ) {
 	var categoriesHinter = function() { return categoriesHint; };
 	$categoriesDiv
 		.find( '.mwe-upwiz-details-fieldname' )
-		.append( gM( 'mwe-upwiz-categories' ) )
+		.append( mw.msg( 'mwe-upwiz-categories' ) )
 		.addHint( 'mwe-upwiz-categories-hint', categoriesHinter );
 	var categoriesId = 'categories' + _this.upload.index;
 	$categoriesDiv.find( '.mwe-upwiz-details-input' )
@@ -127,7 +127,7 @@ mw.UploadWizardDetails = function( upload, api, containerDiv ) {
 	var dateInputDiv = $j( '<div class="mwe-upwiz-details-fieldname-input ui-helper-clearfix"></div>' )
 		.append(
 			dateErrorDiv,
-			$j( '<div class="mwe-upwiz-details-fieldname"></div>' ).append( gM( 'mwe-upwiz-date-created' ) ).requiredFieldLabel().addHint( 'date' ),
+			$j( '<div class="mwe-upwiz-details-fieldname"></div>' ).append( mw.msg( 'mwe-upwiz-date-created' ) ).requiredFieldLabel().addHint( 'date' ),
 			$j( '<div class="mwe-upwiz-details-input"></div>' ).append( _this.dateInput ) );
 
 	var moreDetailsCtrlDiv = $j( '<div class="mwe-upwiz-details-more-options"></div>' );
@@ -139,7 +139,7 @@ mw.UploadWizardDetails = function( upload, api, containerDiv ) {
 		.growTextArea();
 
 	var otherInformationDiv = $j('<div></div>')
-		.append( $j( '<div class="mwe-upwiz-details-more-label"></div>' ).append( gM( 'mwe-upwiz-other' ) ).addHint( 'other' ) )
+		.append( $j( '<div class="mwe-upwiz-details-more-label"></div>' ).append( mw.msg( 'mwe-upwiz-other' ) ).addHint( 'other' ) )
 		.append( _this.otherInformationInput );
 
 	/* Altitude is not yet supported by any of the geo tools deployed on WMF sites */
@@ -156,18 +156,18 @@ mw.UploadWizardDetails = function( upload, api, containerDiv ) {
 	//_this.altInput.val( mw.UploadWizard.config.defaultAlt );
 
 	var latDiv = $j( '<div class="mwe-location-lat"></div>' )
-		.append( $j ( '<div class="mwe-location-lat-label"></div>' ).append( gM( 'mwe-upwiz-location-lat' )  ) )
+		.append( $j ( '<div class="mwe-location-lat-label"></div>' ).append( mw.msg( 'mwe-upwiz-location-lat' )  ) )
 		.append( _this.latInput );
 	var lonDiv = $j( '<div class="mwe-location-lon"></div>' )
-		.append( $j ( '<div class="mwe-location-lon-label"></div>' ).append( gM( 'mwe-upwiz-location-lon' )  ) )
+		.append( $j ( '<div class="mwe-location-lon-label"></div>' ).append( mw.msg( 'mwe-upwiz-location-lon' )  ) )
 		.append( _this.lonInput );
 	//var altDiv = $j( '<div class="mwe-location-alt"></div>' )
-	//	.append( $j ( '<div class="mwe-location-alt-label"></div>' ).append( gM( 'mwe-upwiz-location-alt' )  ) )
+	//	.append( $j ( '<div class="mwe-location-alt-label"></div>' ).append( mw.msg( 'mwe-upwiz-location-alt' )  ) )
 	//	.append( _this.altInput );
 
 	var locationDiv = $j( '<div class="mwe-location mwe-upwiz-details-fieldname-input ui-helper-clearfix"></div>' )
 		.append( $j ('<div class="mwe-location-label"></div>' )
-		.append( gM( 'mwe-upwiz-location' ) )
+		.append( mw.msg( 'mwe-upwiz-location' ) )
 		.addHint( 'location' ) )
 		.append(
 			$j( '<div class="mwe-upwiz-details-input-error"><label class="mwe-validator-error" for="' + latId + '" generated="true"/></div>' ),
@@ -177,7 +177,6 @@ mw.UploadWizardDetails = function( upload, api, containerDiv ) {
 		);
 
 	$j( moreDetailsDiv ).append(
-		$categoriesDiv,
 		locationDiv,
 		otherInformationDiv
 	);
@@ -190,7 +189,8 @@ mw.UploadWizardDetails = function( upload, api, containerDiv ) {
 		_this.descriptionsDiv,
 		descriptionAdderDiv,
 		_this.copyrightInfoFieldset,
-		dateInputDiv
+		dateInputDiv,
+		$categoriesDiv
 	);
 
 	if ( mw.UploadWizard.config.idField ) {
@@ -270,8 +270,8 @@ mw.UploadWizardDetails = function( upload, api, containerDiv ) {
 		required: true,
 		/* dateISO: true, */
 		messages: {
-			required: gM( 'mwe-upwiz-error-blank' )
-			/* dateISO: gM( 'mwe-upwiz-error-date' ) */
+			required: mw.msg( 'mwe-upwiz-error-blank' )
+			/* dateISO: mw.msg( 'mwe-upwiz-error-date' ) */
 		}
 	} );
 
@@ -302,7 +302,7 @@ mw.UploadWizardDetails = function( upload, api, containerDiv ) {
 		_this.idFieldInput.rules( "add", {
 			required: true,
 			messages: {
-				required: gM( 'mwe-upwiz-error-blank' )
+				required: mw.msg( 'mwe-upwiz-error-blank' )
 			}
 		} );
 	}
@@ -311,8 +311,8 @@ mw.UploadWizardDetails = function( upload, api, containerDiv ) {
 		min: -90,
 		max: 90,
 		messages: {
-			min: gM( 'mwe-upwiz-error-latitude' ),
-			max: gM( 'mwe-upwiz-error-latitude' )
+			min: mw.msg( 'mwe-upwiz-error-latitude' ),
+			max: mw.msg( 'mwe-upwiz-error-latitude' )
 		}
 	} );
 
@@ -320,8 +320,8 @@ mw.UploadWizardDetails = function( upload, api, containerDiv ) {
 		min: -180,
 		max: 180,
 		messages: {
-			min: gM( 'mwe-upwiz-error-longitude' ),
-			max: gM( 'mwe-upwiz-error-longitude' )
+			min: mw.msg( 'mwe-upwiz-error-longitude' ),
+			max: mw.msg( 'mwe-upwiz-error-longitude' )
 		}
 	} );
 
@@ -331,7 +331,7 @@ mw.UploadWizardDetails = function( upload, api, containerDiv ) {
 	_this.altInput.rules( "add", {
 		number: true,
 		messages: {
-			number: gM( 'mwe-upwiz-error-altitude' )
+			number: mw.msg( 'mwe-upwiz-error-altitude' )
 		}
 	} );
 	*/
@@ -355,7 +355,7 @@ mw.UploadWizardDetails = function( upload, api, containerDiv ) {
 			.rules( "add", {
 				required: true,
 				messages: {
-					required: gM( 'mwe-upwiz-error-blank' )
+					required: mw.msg( 'mwe-upwiz-error-blank' )
 				}
 			} );
 	} else {
@@ -368,23 +368,23 @@ mw.UploadWizardDetails = function( upload, api, containerDiv ) {
 				titleThumbnail: true,
 				titleExtension: true,
 				messages: {
-					required: gM( 'mwe-upwiz-error-blank' ),
-					titleBadchars: gM( 'mwe-upwiz-error-title-badchars' ),
-					titleSenselessimagename: gM( 'mwe-upwiz-error-title-senselessimagename' ),
-					titleThumbnail: gM( 'mwe-upwiz-error-title-thumbnail' ),
-					titleExtension: gM( 'mwe-upwiz-error-title-extension' )
+					required: mw.msg( 'mwe-upwiz-error-blank' ),
+					titleBadchars: mw.msg( 'mwe-upwiz-error-title-badchars' ),
+					titleSenselessimagename: mw.msg( 'mwe-upwiz-error-title-senselessimagename' ),
+					titleThumbnail: mw.msg( 'mwe-upwiz-error-title-thumbnail' ),
+					titleExtension: mw.msg( 'mwe-upwiz-error-title-extension' )
 				}
 			} );
 	}
 	// make this a category picker
 	var hiddenCats = mw.UploadWizard.config.autoCategories === undefined ? [] : mw.UploadWizard.config.autoCategories;
-	if ( mw.UploadWizard.config.autoCategory !== undefined && mw.UploadWizard.config.autoCategory !== '' ) {
+	if ( typeof mw.UploadWizard.config.autoCategory === 'string' && mw.UploadWizard.config.autoCategory.length > 0 ) {
 		hiddenCats.push( mw.UploadWizard.config.autoCategory );
 	}
 
 	var missingCatsWikiText = null;
-	if ( mw.UploadWizard.config.missingCategoriesWikiText !== undefined
-			&& mw.UploadWizard.config.missingCategoriesWikiText !== '' ) {
+	if ( typeof mw.UploadWizard.config.missingCategoriesWikiText === 'string'
+		 && mw.UploadWizard.config.missingCategoriesWikiText.length > 0 ) {
 		missingCatsWikiText = mw.UploadWizard.config.missingCategoriesWikiText;
 	}
 
@@ -392,10 +392,10 @@ mw.UploadWizardDetails = function( upload, api, containerDiv ) {
 	_this.$catinput.mwCoolCats( {
 		api: _this.upload.api,
 		hiddenCats: hiddenCats,
-		buttontext: gM( 'mwe-upwiz-categories-add' ),
+		buttontext: mw.msg( 'mwe-upwiz-categories-add' ),
 		cats: mw.UploadWizard.config.defaultCategories === undefined ? [] : mw.UploadWizard.config.defaultCategories,
 		missingCatsWikiText: missingCatsWikiText,
-		willbeaddedtext: gM( 'mwe-upwiz-category-will-be-added' ),
+		willbeaddedtext: mw.msg( 'mwe-upwiz-category-will-be-added' ),
 		onnewcat: function () {
 			_this.updateCopyMsgs();
 		}
@@ -442,11 +442,19 @@ mw.UploadWizardDetails.prototype = {
 
 		// In the simplest case, we can use this self-explanatory vanilla loop.
 		var simpleCopy = function( id, tag ) {
-			if ( tag === undefined ) tag = 'input';
+			if ( tag === undefined ) {
+				tag = 'input';
+			}
 			var firstId = '#' + id + sourceId;
 			var firstValue = $j( firstId ).val();
 			$j( tag + '[id^=' + id + ']:not(' + firstId + ')' ).each( function () {
 				$j( this ).val( firstValue );
+				if ( $j( this ).parents( '.mwe-more-details' ).length === 1 ) {
+					var moreInfo = $( this ).parents( '.detailsForm' ).find( '.mwe-upwiz-details-more-options a' );
+					if ( !moreInfo.hasClass( "mwe-upwiz-toggler-open" ) ) {
+						moreInfo.click();
+					}
+				}
 			});
 		};
 
@@ -559,9 +567,9 @@ mw.UploadWizardDetails.prototype = {
 			var cb = 'mwe-upwiz-copy-' + v;
 			var copyMetadataMsg;
 			if ( v === 'description' || v === 'categories' ) {
-				copyMetadataMsg = gM( cb, 1 );
+				copyMetadataMsg = mw.msg( cb, 1 );
 			} else {
-				copyMetadataMsg = gM( cb );
+				copyMetadataMsg = mw.msg( cb );
 			}
 			copyMetadataDiv.append( $j( '<input type="checkbox" name="' + cb + '" id="' + cb + '" checked />' ) );
 			copyMetadataDiv.append( $j( '<label for="' + cb + '">' + copyMetadataMsg + '</label>' ) );
@@ -569,16 +577,21 @@ mw.UploadWizardDetails.prototype = {
 		} ) ;
 
 		copyMetadataDiv.append(
-			$j( '<button type="button" id="mwe-upwiz-copy-metadata-button">'  )
+			$j( '<button type="button" id="mwe-upwiz-copy-metadata-button">' )
 			.msg( 'mwe-upwiz-copy-metadata-button' )
 			.button()
 			.click(
 				function( e ) {
+					var button = $( this ).find( 'span' );
 					$j.each( _this.copyMetadataTypes, function makeCopies( i, metadataType ) {
 							if ( $j( '#mwe-upwiz-copy-' + metadataType ).is( ':checked' ) ) {
 								_this.copyMetadata( metadataType );
 							}
 						} );
+					button.text( mw.msg( 'mwe-upwiz-copied-metadata-button' ) );
+					setTimeout( function( ) {
+						button.text( mw.msg( 'mwe-upwiz-copy-metadata-button' ) );
+					}, 1000 );
 					e.stopPropagation();
 				}
 			)
@@ -613,13 +626,12 @@ mw.UploadWizardDetails.prototype = {
 				}
 			}
 		];
-		for ( var mx in msgs ) {
-			var msg = msgs[mx];
+		$.each( msgs, function( index, msg ) {
 			var $lbl = $( 'label[for="' + msg.title + '"]' );
-			$lbl.text( gM( msg.title, msg.counter() ) );
-		}
+			$lbl.text( mw.msg( msg.title, msg.counter() ) );
+		} );
 		$lbl = $( '.mwe-upwiz-details-copy-metadata a', _this.$form );
-		$lbl.text( gM( 'mwe-upwiz-copy-metadata', _this.upload.wizard.uploads.length - 1 ) );
+		$lbl.text( mw.msg( 'mwe-upwiz-copy-metadata', _this.upload.wizard.uploads.length - 1 ) );
 	},
 
 	/**
@@ -639,7 +651,7 @@ mw.UploadWizardDetails.prototype = {
 		// make sure title is valid
 		var titleInputValid = $j( _this.titleInput ).data( 'valid' );
 		if ( titleInputValid === undefined ) {
-			setTimeout( function () { _this.valid(cb) }, 200 );
+			setTimeout( function () { _this.valid(cb); }, 200 );
 			return;
 		}
 
@@ -663,13 +675,42 @@ mw.UploadWizardDetails.prototype = {
 		_this.copyrightInfoFieldset.show();
 		_this.upload.wizardDeedChooser = _this.upload.deedChooser;
 
-		_this.upload.deedChooser = new mw.UploadWizardDeedChooser(
-			_this.deedDiv,
-			_this.upload.wizard.getLicensingDeeds(),
-			[ _this.upload ]
-		);
+		// Defining own deedChooser for uploads coming from external service
+		if ( _this.upload.fromURL ) {
+			if ( _this.upload.providedFile.license ) {
+				// XXX can be made a seperate class as mw.UploadFromUrlDeedChooser
+				_this.upload.deedChooser = {
+					valid : function(){ return true; }
+				};
 
-		_this.upload.deedChooser.onLayoutReady();
+				// Need to add tipsy tips here
+				$j( _this.deedDiv ).append( _this.upload.providedFile.licenseMessage );
+
+				// XXX need to add code in the remaining functions
+				_this.upload.deedChooser.deed = {
+					valid : function(){ return true; },
+					getSourceWikiText : function() {
+						if ( typeof _this.upload.providedFile.sourceURL !== 'undefined' ) {
+							return _this.upload.providedFile.sourceURL;
+						} else {
+							return _this.upload.providedFile.url;
+						}
+					},
+					getAuthorWikiText : function() {
+						return _this.upload.providedFile.author;
+					},
+					getLicenseWikiText : function() {
+						return _this.upload.providedFile.licenseValue;
+					}
+				};
+			}
+		} else {
+			_this.upload.deedChooser = new mw.UploadWizardDeedChooser(
+				_this.deedDiv,
+				_this.upload.wizard.getLicensingDeeds(),
+				[ _this.upload ] );
+			_this.upload.deedChooser.onLayoutReady();
+		}
 	},
 
 	/**
@@ -690,7 +731,7 @@ mw.UploadWizardDetails.prototype = {
 	 * Process the result of a destination filename check.
 	 * See mw.DestinationChecker.js for documentation of result format
 	 * XXX would be simpler if we created all these divs in the DOM and had a more jquery-friendly way of selecting
- 	 * attrs. Instead we create & destroy whole interface each time. Won't someone think of the DOM elements?
+	 * attrs. Instead we create & destroy whole interface each time. Won't someone think of the DOM elements?
 	 * @param result
 	 */
 	processDestinationCheck: function( result ) {
@@ -720,14 +761,14 @@ mw.UploadWizardDetails.prototype = {
 		if ( ! result.unique.isUnique ) {
 			// result is NOT unique
 			if ( result.href ) {
-				errHtml = gM( 'mwe-upwiz-fileexists-replace-on-page', titleString, $j( '<a />' ).attr( { href: result.href, target: '_blank' } ) );
+				errHtml = mw.message( 'mwe-upwiz-fileexists-replace-on-page', titleString, $j( '<a />' ).attr( { href: result.href, target: '_blank' } ) ).parse();
 			} else {
-				errHtml = gM( 'mwe-upwiz-fileexists-replace-no-link', titleString );
+				errHtml = mw.msg( 'mwe-upwiz-fileexists-replace-no-link', titleString );
 			}
 
 			$errorEl.html( errHtml ).show();
 		} else {
-			errHtml = gM( 'mwe-upwiz-blacklisted', titleString );
+			errHtml = mw.msg( 'mwe-upwiz-blacklisted', titleString );
 
 			$errorEl.html( errHtml );
 
@@ -754,8 +795,8 @@ mw.UploadWizardDetails.prototype = {
 					'mwe-upwiz-feedback-blacklist-report-prompt',
 					function() {
 						feedback.launch( {
-							message: gM( 'mwe-upwiz-feedback-blacklist-line-intro', result.blacklist.blacklistLine ),
-							subject: gM( 'mwe-upwiz-feedback-blacklist-subject', titleString )
+							message: mw.msg( 'mwe-upwiz-feedback-blacklist-line-intro', result.blacklist.blacklistLine ),
+							subject: mw.msg( 'mwe-upwiz-feedback-blacklist-subject', titleString )
 						} );
 						return false;
 					}
@@ -774,7 +815,7 @@ mw.UploadWizardDetails.prototype = {
 	recountDescriptions: function() {
 		var _this = this;
 		// if there is some maximum number of descriptions, deal with that here
-		$j( _this.descriptionAdder ).html( gM( 'mwe-upwiz-desc-add-' + ( _this.descriptions.length === 0 ? '0' : 'n' )  )  );
+		$j( _this.descriptionAdder ).html( mw.msg( 'mwe-upwiz-desc-add-' + ( _this.descriptions.length === 0 ? '0' : 'n' )  )  );
 	},
 
 
@@ -799,7 +840,7 @@ mw.UploadWizardDetails.prototype = {
 
 		if ( !required && allowRemove ) {
 			$j( description.div  ).append(
-				 $j.fn.removeCtrl( null, 'mwe-upwiz-remove-description', function() { _this.removeDescription( description ); } )
+				$j.fn.removeCtrl( null, 'mwe-upwiz-remove-description', function() { _this.removeDescription( description ); } )
 			);
 		}
 
@@ -842,7 +883,7 @@ mw.UploadWizardDetails.prototype = {
 		var _this = this;
 		var args = Array.prototype.slice.call( arguments  ); // copies arguments into a real array
 		var msg = 'mwe-upwiz-upload-error-' + args[0];
-		$j( _this.errorDiv ).append( $j( '<p class="mwe-upwiz-upload-error">' + gM( msg, args.slice( 1 ) ) + '</p>' ) );
+		$j( _this.errorDiv ).append( $j( '<p class="mwe-upwiz-upload-error">' + mw.msg( msg, args.slice( 1 ) ) + '</p>' ) );
 		// apply a error style to entire did
 		$j( _this.div ).addClass( 'mwe-upwiz-upload-error' );
 		$j( _this.dataDiv ).hide();
@@ -860,11 +901,12 @@ mw.UploadWizardDetails.prototype = {
 			mw.UploadWizard.config['thumbnailWidth'],
 			mw.UploadWizard.config['thumbnailMaxHeight'],
 			true
-		 );
+		);
 		_this.prefillDate();
 		_this.prefillSource();
 		_this.prefillAuthor();
 		_this.prefillTitle();
+		_this.prefillDescription();
 		_this.prefillLocation();
 	},
 
@@ -908,6 +950,16 @@ mw.UploadWizardDetails.prototype = {
 					}
 				}
 			} );
+		}
+
+		// If we don't have EXIF lets try other sources - Flickr
+		if ( dateObj === undefined && typeof this.upload.file !== 'undefined' && typeof this.upload.file.date !== 'undefined' ) {
+			var dateTimeRegex = /^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d/;
+			var matches = this.upload.file.date.match( dateTimeRegex );
+			if ( !mw.isEmpty( matches ) ) {
+				$j( _this.dateInput ).val( this.upload.file.date );
+				return;
+			}
 		}
 
 		// if we don't have EXIF or other metadata, let's use "now"
@@ -960,7 +1012,24 @@ mw.UploadWizardDetails.prototype = {
 	},
 
 	/**
- 	 * Prefill location inputs (and/or scroll to position on map) from image info and metadata
+	 * Prefill the image description if we have a description
+	 *
+	 * Note that this is not related to specifying the descrition from the query
+	 * string (that happens earlier). This is for when we have retrieved a
+	 * description from an upload_by_url upload (e.g. Flickr transfer)
+	 */
+	prefillDescription: function() {
+		if ( this.descriptions[0].getText() === ''
+			&& this.upload.file !== undefined
+			&& this.upload.file.description !== undefined
+			&& this.upload.file.description !== ''
+		) {
+			this.descriptions[0].setText( this.upload.file.description );
+		}
+	},
+
+	/**
+	 * Prefill location inputs (and/or scroll to position on map) from image info and metadata
 	 *
 	 * As of MediaWiki 1.18, the exif parser translates the rational GPS data tagged by the camera
 	 * to decimal format (accept for altitude, bug 32410).  Let's just use that.
@@ -972,12 +1041,18 @@ mw.UploadWizardDetails.prototype = {
 		if ( _this.upload.imageinfo.metadata ) {
 			var m = _this.upload.imageinfo.metadata;
 
-			if ( m['gpslatitude'] !== undefined ) {
+			if ( m['gpslatitude'] !== undefined && m['gpslongitude'] !== undefined ) {
 				$j( _this.latInput ).val( m['gpslatitude'] );
-			}
-			if ( m['gpslongitude'] !== undefined ) {
 				$j( _this.lonInput ).val( m['gpslongitude'] );
+			} else if ( typeof this.upload.file !== 'undefined'
+				&& typeof this.upload.file.location !== 'undefined'
+				&& this.upload.file.location.latitude
+				&& this.upload.file.location.longitude )
+			{
+				$j( _this.latInput ).val( this.upload.file.location.latitude );
+				$j( _this.lonInput ).val( this.upload.file.location.longitude );
 			}
+
 			//if ( m['gpsaltitude'] !== undefined ) {
 			//	$j( _this.altInput ).val( m['gpsaltitude'] );
 			//}
@@ -1065,7 +1140,7 @@ mw.UploadWizardDetails.prototype = {
 		// if invalid, should produce side effects in the form
 		// instructing user to fix.
 		_this.valid( function () {
-			wikiText = '';
+			var wikiText = '';
 
 
 			// http://commons.wikimedia.org / wiki / Template:Information
@@ -1104,7 +1179,7 @@ mw.UploadWizardDetails.prototype = {
 			// Add 2nd id field if needed
 			if ( mw.UploadWizard.config.idField2 ) {
 				var idField2Value = $j.trim( $j( _this.idField2Input ).val() );
-	
+
 				if ( ! mw.isEmpty( idField2Value ) ) { // HAXXX
 					information['description'] += mw.UploadWizard.config.idField2.replace( '$1', idField2Value );
 				}
@@ -1129,7 +1204,7 @@ mw.UploadWizardDetails.prototype = {
 			var lat = $j.trim( $j( _this.latInput ).val() );
 			var lon = $j.trim( $j( _this.lonInput ).val() );
 			//var alt = $j.trim( $j( _this.altInput ).val() );
-	
+
 			// Do not require the altitude to be set, to prevent people from entering 0
 			// while it's actually unknown.
 			// When none is provided, this will result in {{Location dec|int|int|}}.
@@ -1174,8 +1249,10 @@ mw.UploadWizardDetails.prototype = {
 		$('form', _this.containerDiv).submit();
 
 		_this.upload.state = 'submitting-details';
-		_this.setStatus( gM( 'mwe-upwiz-submitting-details' ) );
+		_this.setStatus( mw.msg( 'mwe-upwiz-submitting-details' ) );
 		_this.showIndicator( 'progress' );
+
+		var firstPoll = ( new Date() ).getTime();
 
 		var params = {
 			action: 'upload',
@@ -1183,6 +1260,10 @@ mw.UploadWizardDetails.prototype = {
 			filename: _this.upload.title.getMain(),
 			comment: "User created page with " + mw.UploadWizard.userAgent
 		};
+		//only enable async publishing if file is larger than 10Mb
+		if ( _this.upload.transportWeight > 10*1024*1024 ) {
+			params[ 'async'  ] = true;
+		}
 
 		var err = function( code, info ) {
 			_this.upload.state = 'error';
@@ -1192,6 +1273,25 @@ mw.UploadWizardDetails.prototype = {
 		var ok = function( result ) {
 			var warnings = null;
 			var wasDeleted = false;
+			if ( result && result.upload && result.upload.result == 'Poll' ) {
+				// if async publishing takes longer than 10 minutes give up
+				if ( ( ( new Date() ).getTime() - firstPoll ) > 10 * 60 * 1000 ) {
+					err('server-error', 'unknown server error');
+				} else {
+					_this.setStatus( mw.msg( 'mwe-upwiz-' + result.upload.stage ) );
+					setTimeout( function() {
+						if ( _this.upload.state != 'aborted' ) {
+							_this.upload.api.postWithEditToken( {
+								action: 'upload',
+								checkstatus: true,
+								filekey: _this.upload.fileKey
+							},
+							ok, err );
+						}
+					}, 3000 );
+				}
+				return;
+			}
 			if ( result && result.upload && result.upload.warnings ) {
 				warnings = result.upload.warnings;
 			}
@@ -1210,21 +1310,21 @@ mw.UploadWizardDetails.prototype = {
 				_this.upload.detailsProgress = 1.0;
 				_this.upload.state = 'complete';
 				_this.showIndicator( 'uploaded' );
-				_this.setStatus( gM( 'mwe-upwiz-published' ) );
+				_this.setStatus( mw.msg( 'mwe-upwiz-published' ) );
 			} else if ( wasDeleted === true ) {
 				params.ignorewarnings = 1;
 				_this.upload.api.postWithEditToken( params, ok, err );
 			} else if ( result && result.upload.warnings ) {
 				if ( warnings['thumb'] ) {
-					_this.recoverFromError( _this.titleId, gM( 'mwe-upwiz-error-title-thumbnail' ) );
+					_this.recoverFromError( _this.titleId, mw.msg( 'mwe-upwiz-error-title-thumbnail' ) );
 				} else if ( warnings['badfilename'] ) {
-					_this.recoverFromError( _this.titleId, gM( 'mwe-upwiz-error-title-badchars' ) );
+					_this.recoverFromError( _this.titleId, mw.msg( 'mwe-upwiz-error-title-badchars' ) );
 				} else if ( warnings['bad-prefix'] ) {
-					_this.recoverFromError( _this.titleId, gM( 'mwe-upwiz-error-title-senselessimagename' ) );
+					_this.recoverFromError( _this.titleId, mw.msg( 'mwe-upwiz-error-title-senselessimagename' ) );
 				} else if ( warnings['exists'] || warnings['exists-normalized'] ) {
-					_this.recoverFromError( _this.titleId, gM( 'mwe-upwiz-api-warning-exists', _this.upload.title.getUrl() ) );
+					_this.recoverFromError( _this.titleId, mw.msg( 'mwe-upwiz-api-warning-exists', _this.upload.title.getUrl() ) );
 				} else if ( warnings['duplicate'] ) {
-					_this.recoverFromError( _this.titleId, gM( 'mwe-upwiz-upload-error-duplicate' ) );
+					_this.recoverFromError( _this.titleId, mw.msg( 'mwe-upwiz-upload-error-duplicate' ) );
 				} else if ( warnings['duplicate-archive'] ) {
 					if ( _this.upload.ignoreWarning['duplicate-archive'] ) {
 						// We already told the interface to ignore this warning, so
@@ -1233,7 +1333,7 @@ mw.UploadWizardDetails.prototype = {
 						_this.upload.api.postWithEditToken( params, ok, err );
 					} else {
 						// This should _never_ happen, but just in case....
-						_this.recoverFromError( _this.titleId, gM( 'mwe-upwiz-upload-error-duplicate-archive' ) );
+						_this.recoverFromError( _this.titleId, mw.msg( 'mwe-upwiz-upload-error-duplicate-archive' ) );
 					}
 				} else {
 					var warningsKeys = [];
@@ -1241,7 +1341,7 @@ mw.UploadWizardDetails.prototype = {
 						warningsKeys.push( key );
 					} );
 					_this.upload.state = 'error';
-					_this.recoverFromError( _this.titleId, gM( 'api-error-unknown-warning', warningsKeys.join( ', ' ) ) );
+					_this.recoverFromError( _this.titleId, mw.msg( 'api-error-unknown-warning', warningsKeys.join( ', ' ) ) );
 				}
 			} else {
 				err( 'details-info-missing', result );
@@ -1286,35 +1386,36 @@ mw.UploadWizardDetails.prototype = {
 	 * @param {Mixed} result from ajax call
 	 */
 	processError: function( code, result ) {
-		var statusLine = gM( 'api-error-unclassified' );
+		var statusKey;
+		var statusLine = mw.msg( 'api-error-unclassified' );
 		var titleErrorMap = {
 			'senselessimagename': 'senselessimagename',
 			'fileexists-shared-forbidden': 'fileexists-shared-forbidden',
-		 	'titleblacklist-custom-filename': 'hosting',
+			'titleblacklist-custom-filename': 'hosting',
 			'titleblacklist-custom-SVG-thumbnail': 'thumbnail',
 			'titleblacklist-custom-thumbnail': 'thumbnail',
-		 	'titleblacklist-custom-double-apostrophe': 'double-apostrophe',
-		 	'protectedpage': 'protected'
+			'titleblacklist-custom-double-apostrophe': 'double-apostrophe',
+			'protectedpage': 'protected'
 		};
 		if ( result && result.error && result.error.code ) {
 			if ( titleErrorMap[code] ) {
-				this.recoverFromError( this.titleId, gM( 'mwe-upwiz-error-title-' + titleErrorMap[code] ) );
+				this.recoverFromError( this.titleId, mw.msg( 'mwe-upwiz-error-title-' + titleErrorMap[code] ) );
 				return;
 			} else {
 				statusKey = 'api-error-' + code;
 				if ( code === 'filetype-banned' && result.error.blacklisted ) {
 					var comma = mw.msg( 'comma-separator' );
 					code = 'filetype-banned-type';
-					statusLine = gM( 'api-error-filetype-banned-type', [
+					statusLine = mw.msg( 'api-error-filetype-banned-type',
 						result.error.blacklisted.join( comma ),
 						result.error.allowed.join( comma ),
 						result.error.allowed.length,
 						result.error.blacklisted.length
-					]);
+					);
 				} else if ( result.error.info ) {
-					statusLine = gM( statusKey, result.error.info );
+					statusLine = mw.msg( statusKey, result.error.info );
 				} else {
-					statusLine = gM( statusKey, '[no error info]' );
+					statusLine = mw.msg( statusKey, '[no error info]' );
 				}
 			}
 		}

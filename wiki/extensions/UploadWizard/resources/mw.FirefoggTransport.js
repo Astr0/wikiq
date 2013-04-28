@@ -26,6 +26,7 @@ mw.FirefoggTransport.prototype = {
 		if (this.isUploadFormat()) {
 			_this.doFormDataUpload(this.upload.ui.$fileInputCtrl[0].files[0]);
 		} else {
+			this.upload.ui.setStatus( 'mwe-upwiz-encoding' );
 			this.fogg.encode( JSON.stringify( this.getEncodeSettings() ),
 				function(result, file) {
 					result = JSON.parse(result);
@@ -41,13 +42,19 @@ mw.FirefoggTransport.prototype = {
 						_this.transportedCb(response);
 					}
 				}, function(progress) { //progress
-					progress = JSON.parse(progress);
-					_this.progressCb( progress );
+					if ( _this.upload.state == 'aborted' ) {
+						_this.fogg.cancel();
+					} else {
+						progress = JSON.parse(progress);
+						_this.progressCb( progress );
+						_this.upload.ui.setStatus( 'mwe-upwiz-encoding' );
+					}
 				}
 			);
 		}
 	},
 	doFormDataUpload: function(file) {
+		this.upload.ui.setStatus( 'mwe-upwiz-uploading' );
 		this.upload.file = file;
 		this.uploadHandler = new mw.ApiUploadFormDataHandler( this.upload, this.api );
 		this.uploadHandler.start();
@@ -73,12 +80,22 @@ mw.FirefoggTransport.prototype = {
 
 	isSourceAudio: function() {
 		var info = this.getSourceFileInfo();
-		return ( info.video.length == 0 && info.audio.length > 0 ) || info.contentType.indexOf( "audio/" ) != -1;
+		// never transcode images
+		if ( info.contentType.indexOf( "image/" ) != -1 ) {
+			return false;
+		}
+		return ( (!info.video || info.video.length == 0) && info.audio.length > 0 )
+			|| info.contentType.indexOf( "audio/" ) != -1;
 	},
 
 	isSourceVideo: function() {
 		var info = this.getSourceFileInfo();
-		return info.video.length > 0 || info.contentType.indexOf( "video/" ) != -1;
+		// never transcode images
+		if ( info.contentType.indexOf( "image/" ) != -1 ) {
+			return false;
+		}
+		return ( info.video && info.video.length > 0 && info.video[0].duration > 0.04 )
+			|| info.contentType.indexOf( "video/" ) != -1;
 	},
 
 	isOggFormat: function() {

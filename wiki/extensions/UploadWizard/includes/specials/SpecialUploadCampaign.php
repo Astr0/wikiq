@@ -45,18 +45,34 @@ class SpecialUploadCampaign extends FormSpecialPage {
 	}
 
 	/**
+	 * @see parent::execute
+	 *
+	 * @param string $subPage
+	 */
+	public function execute( $subPage ) {
+		parent::execute( $subPage );
+
+		$this->getOutput()->addModules( 'ext.uploadWizard.campaign' );
+	}
+
+	/**
 	 * (non-PHPdoc)
 	 * @see FormSpecialPage::getForm()
 	 */
 	protected function getForm() {
 		$form = parent::getForm();
+
+		$attribs = array(
+			'onclick' => 'window.location="' . SpecialPage::getTitleFor( 'UploadCampaigns' )->getFullURL() . '";return false;'
+		);
+
+		$attribs += Linker::tooltipAndAccesskeyAttribs( 'cancel-upload-campaign' );
+
 		$form->addButton(
 			'cancelEdit',
 			$this->msg( 'cancel' )->text(),
 			'cancelEdit',
-			array(
-				'onclick' => 'window.location="' . SpecialPage::getTitleFor( 'UploadCampaigns' )->getFullURL() . '";return false;'
-			)
+			$attribs
 		);
 
 		return $form;
@@ -86,8 +102,8 @@ class SpecialUploadCampaign extends FormSpecialPage {
 			if ( is_array( $data['default'] ) ) {
 				switch ( $data['type'] ) {
 					case 'text': case 'textarea':
-						$data['default'] = implode( '|', $data['default'] );
-						break;
+					$data['default'] = implode( '|', $data['default'] );
+					break;
 				}
 			}
 
@@ -114,7 +130,18 @@ class SpecialUploadCampaign extends FormSpecialPage {
 		$enabled = $data['Campaignenabled'];
 		unset( $data['Campaignenabled'] );
 
-		$campaign = UploadWizardCampaigns::singleton()->newFromArray( array(
+		$hasNameConflict = UploadWizardCampaigns::singleton()->has(
+			array(
+				'id <>' . (int)$id,
+				'name' => $name,
+			)
+		);
+
+		if ( $hasNameConflict ) {
+			return array( 'mwe-upwiz-campaign-name-duplicate' );
+		}
+
+		$campaign = UploadWizardCampaigns::singleton()->newRow( array(
 			'id' => $id,
 			'name' => $name,
 			'enabled' => $enabled
@@ -128,12 +155,21 @@ class SpecialUploadCampaign extends FormSpecialPage {
 			return true;
 		}
 		else {
-			return array(); // TODO
+			return array( 'mwe-upwiz-campaign-unknown-error' );
 		}
 	}
 
 	public function onSuccess() {
 		$this->getOutput()->redirect( SpecialPage::getTitleFor( 'UploadCampaigns' )->getLocalURL( array( 'refresh' => '1' ) ) );
+	}
+
+	/**
+	 * @see FormSpecialPage::alterForm
+	 *
+	 * @param HTMLForm $form
+	 */
+	protected function alterForm( HTMLForm $form ) {
+		$form->setSubmitTooltip( 'save-upload-campaign' );
 	}
 
 }

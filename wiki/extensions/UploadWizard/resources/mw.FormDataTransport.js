@@ -15,9 +15,11 @@ mw.FormDataTransport = function( postUrl, formData, uploadObject, progressCb, tr
 	this.uploadObject = uploadObject;
 
     this.postUrl = postUrl;
-    this.chunkSize = 1 * 1024 * 1024; //1Mb
+    //set chunk size to 5MB or max php size
+    this.chunkSize = Math.min(5 * 1024 * 1024, mw.UploadWizard.config.maxPhpUploadSize);
     this.maxRetries = 2;
     this.retries = 0;
+    this.firstPoll = false;
 
     // Workaround for Firefox < 7.0 sending an empty string
     // as filename for Blobs in FormData requests, something PHP does not like
@@ -28,8 +30,7 @@ mw.FormDataTransport = function( postUrl, formData, uploadObject, progressCb, tr
 mw.FormDataTransport.prototype = {
     upload: function() {
         var _this = this,
-            file = this.uploadObject.file,
-            bytesAvailable = file.size;
+            file = this.uploadObject.file;
 
         // use timestamp + filename to avoid conflicts on server
         this.tempname = ( new Date() ).getTime().toString() + file.name;
@@ -49,8 +50,12 @@ mw.FormDataTransport.prototype = {
                 _this.parseResponse(evt, _this.transportedCb);
             }, false);
             this.xhr.upload.addEventListener("progress", function (evt) {
+                if ( _this.uploadObject.state == 'aborted' ) {
+                    _this.xhr.abort();
+                    return;
+                }
                 if (evt.lengthComputable) {
-                    var progress = parseFloat(evt.loaded) / bytesAvailable;
+                    var progress = parseFloat(evt.loaded / evt.total );
                     _this.progressCb(progress);
                 }
             }, false);
@@ -81,7 +86,12 @@ mw.FormDataTransport.prototype = {
             file = this.uploadObject.file,
             bytesAvailable = file.size,
             chunk;
-
+        if ( this.uploadObject.state == 'aborted' ) {
+            if ( this.xhr ) {
+                this.xhr.abort();
+            }
+            return;
+        }
         //Slice API was changed and has vendor prefix for now
         //new version now require start/end and not start/length
         if(file.mozSlice) {
@@ -102,14 +112,18 @@ mw.FormDataTransport.prototype = {
                 if (response.upload && response.upload.result == 'Success') {
                     //upload finished and can be unstashed later
                     _this.transportedCb(response);
-                }
-                else if (response.upload && response.upload.result == 'Continue') {
+                } else if (response.upload && response.upload.result == 'Poll') {
+                    //Server not ready, wait for 3 seconds
+                    setTimeout(function() {
+                        _this.checkStatus();
+                    }, 3000);
+                } else if (response.upload && response.upload.result == 'Continue') {
                     //reset retry counter
                     _this.retries = 0;
                     //start uploading next chunk
                     _this.uploadChunk(response.upload.offset);
                 } else {
-                    //failed to upload, try again in 3 second
+                    //failed to upload, try again in 3 seconds
                     _this.retries++;
                     if (_this.maxRetries > 0 && _this.retries >= _this.maxRetries) {
 						mw.log( 'max retries exceeded on unknown response' );
@@ -138,6 +152,9 @@ mw.FormDataTransport.prototype = {
             }
         }, false);
         this.xhr.upload.addEventListener("progress", function (evt) {
+            if ( _this.uploadObject.state == 'aborted' ) {
+                _this.xhr.abort();
+            }
             if (evt.lengthComputable) {
                 var progress = parseFloat(offset+evt.loaded)/bytesAvailable;
                 _this.progressCb(progress);
@@ -161,6 +178,10 @@ mw.FormDataTransport.prototype = {
 
 		// ignorewarnings is turned on intentionally, see the above comment to the same effect.
 		formData.append( 'ignorewarnings', true );
+		// only enable async if file is larger 10Mb
+		if ( bytesAvailable > 10 * 1024 * 1024 ) {
+			formData.append( 'async', true );
+		}
 
         if (_this.filekey) {
             formData.append('filekey', _this.filekey);
@@ -177,6 +198,46 @@ mw.FormDataTransport.prototype = {
         } else {
             this.xhr.send(formData);
         }
+    },
+    checkStatus: function() {
+        var _this = this;
+        if ( _this.uploadObject.state == 'aborted' ) {
+            return;
+        }
+        if(!this.firstPoll) {
+            this.firstPoll = ( new Date() ).getTime();
+        }
+        var api = new mw.Api();
+        var params = {};
+        $j.each(this.formData, function(key, value) {
+            params[key] = value;
+        });
+        params['checkstatus'] =  true;
+        params['filekey'] =  this.filekey;
+        api.post( params, {
+            ok: function(response) {
+                if (response.upload && response.upload.result == 'Poll') {
+                    //If concatenation takes longer than 10 minutes give up
+                    if ( ( ( new Date() ).getTime() - _this.firstPoll ) > 10 * 60 * 1000 ) {
+                        _this.transportedCb({
+                            code: 'server-error',
+                            info: 'unknown server error'
+                        });
+                    //Server not ready, wait for 3 more seconds
+                    } else {
+                        _this.uploadObject.ui.setStatus( 'mwe-upwiz-' + response.upload.stage );
+                        setTimeout(function() {
+                            _this.checkStatus();
+                        }, 3000);
+                    }
+                } else {
+                    _this.transportedCb(response);
+                }
+            },
+            err: function(status, response) {
+                _this.transportedCb(response);
+            }
+        } );
     },
     parseResponse: function(evt, callback) {
         var response;

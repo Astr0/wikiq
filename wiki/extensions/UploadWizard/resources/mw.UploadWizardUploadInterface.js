@@ -22,7 +22,8 @@ mw.UploadWizardUploadInterface = function( upload, filesDiv, providedFile ) {
 
 	_this.$fileInputCtrl = $j( '<input size="1" class="mwe-upwiz-file-input" name="file" type="file"/>' );
 	var profile = $.client.profile();
-	if (mw.UploadWizard.config[ 'enableFormData' ] && mw.fileApi.isFormDataAvailable() ) {
+	if (mw.UploadWizard.config[ 'enableFormData' ] && mw.fileApi.isFormDataAvailable() &&
+		mw.UploadWizard.config.enableMultiFileSelect && mw.UploadWizard.config.enableMultipleFiles ) {
 		// Multiple uploads requires the FormData transport
 		_this.$fileInputCtrl.attr( 'multiple', '1' );
 	}
@@ -78,9 +79,7 @@ mw.UploadWizardUploadInterface = function( upload, filesDiv, providedFile ) {
 	_this.form = $j( '<form method="POST" encType="multipart/form-data" class="mwe-upwiz-form"></form>' )
 			.attr( { action: _this.upload.api.defaults.url } )
 			.append( _this.visibleFilenameDiv )
-			.append( _this.fileCtrlContainer
-				.append( _this.$fileInputCtrl )
-			)
+			.append( _this.fileCtrlContainer )
 			.append( _this.filenameCtrl )
 			.get( 0 );
 
@@ -92,9 +91,12 @@ mw.UploadWizardUploadInterface = function( upload, filesDiv, providedFile ) {
 		);
 		$j( '#mwe-upwiz-add-file' ).hide();
 		return;
-	} else {
-		$j( _this.div ).append( _this.form );
 	}
+
+	if ( !_this.upload.fromURL ) {
+		$j( _this.fileCtrlContainer ).append( _this.$fileInputCtrl );
+	}
+	$j( _this.div ).append( _this.form );
 
 	// XXX evil hardcoded
 	// we don't really need filesdiv if we do it this way?
@@ -285,7 +287,7 @@ mw.UploadWizardUploadInterface.prototype = {
 	getFiles: function() {
 		var files = [];
 		if ( mw.fileApi.isAvailable() ) {
-			if( this.providedFile && ! this.$fileInputCtrl.get(0).value ) {  // default to the fileinput if it's defined.
+			if( this.providedFile && !this.$fileInputCtrl.get(0).value ) {  // default to the fileinput if it's defined.
 				files[0] = this.providedFile;
 			} else {
 				$j.each( this.$fileInputCtrl.get(0).files, function( i, file ) {
@@ -329,7 +331,8 @@ mw.UploadWizardUploadInterface.prototype = {
 		if ( this.upload.imageinfo && this.upload.imageinfo.width && this.upload.imageinfo.height ) {
 			statusItems.push( this.upload.imageinfo.width + '\u00d7' + this.upload.imageinfo.height );
 		}
-		if ( this.upload.file ) {
+
+		if( this.upload.file && !this.upload.fromURL ){
 			statusItems.push( mw.units.bytes( this.upload.file.size ) );
 		}
 
@@ -458,7 +461,7 @@ mw.UploadWizardUploadInterface.prototype = {
 	},
 
 	showUnparseableFilenameError: function( filename ) {
-		this.showFilenameError( gM( 'mwe-upwiz-unparseable-filename', filename ) );
+		this.showFilenameError( mw.msg( 'mwe-upwiz-unparseable-filename', filename ) );
 	},
 
 	showBadExtensionError: function( filename, extension ) {
@@ -545,7 +548,7 @@ mw.UploadWizardUploadInterface.prototype = {
 				'margin-left': '-' + ~~( _this.$fileInputCtrl.width() - $covered.outerWidth() - 10 ) + 'px',
 				'margin-top' : '-' + ~~( _this.$fileInputCtrl.height() - $covered.outerHeight() - 10 ) + 'px'
 			} );
-		}
+		};
 
 		if (this.moveFileInputInterval) {
 			window.clearInterval(this.moveFileInputInterval);
@@ -649,7 +652,7 @@ mw.UploadWizardUploadInterface.prototype = {
 		var _this = this;
 		var args = Array.prototype.slice.call( arguments ); // copies arguments into a real array
 		var msg = 'mwe-upwiz-upload-error-' + args[0];
-		$j( _this.errorDiv ).append( $j( '<p class="mwe-upwiz-upload-error">' + gM( msg, args.slice( 1 ) ) + '</p>') );
+		$j( _this.errorDiv ).append( $j( '<p class="mwe-upwiz-upload-error">' + mw.msg( msg, args.slice( 1 ) ) + '</p>') );
 		// apply a error style to entire did
 		$j( _this.div ).addClass( 'mwe-upwiz-upload-error' );
 		$j( _this.errorDiv ).show();

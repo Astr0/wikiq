@@ -28,7 +28,7 @@ class SpecialUploadWizard extends SpecialPage {
 
 		// create a simple form for non-JS fallback, which targets the old Special:Upload page.
 		// at some point, if we completely subsume its functionality, change that to point here again,
-	 	// but then we'll need to process non-JS uploads in the same way Special:Upload does.
+		// but then we'll need to process non-JS uploads in the same way Special:Upload does.
 		$this->simpleForm = new UploadWizardSimpleForm();
 		$this->simpleForm->setTitle(
 			SpecialPage::getTitleFor( 'Upload' )
@@ -111,7 +111,7 @@ class SpecialUploadWizard extends SpecialPage {
 	protected function handleCampaign() {
 		$campaignName = $this->getRequest()->getVal( 'campaign' );
 
-		if ( !is_null( $campaignName ) && $campaignName !== '' ) {
+		if ( !is_null( $campaignName ) &&  $campaignName !== '' ) {
 			$campaign = UploadWizardCampaigns::singleton()->selectRow( 'enabled', array( 'name' => $campaignName ) );
 
 			if ( $campaign === false ) {
@@ -161,6 +161,12 @@ class SpecialUploadWizard extends SpecialPage {
 		if ( $labelPageContent !== false ) {
 			$config['idFieldLabel'] = $labelPageContent;
 		}
+		// UploadFromUrl parameter set to true only if the user is allowed to upload a file from a URL which we need to check in our Javascript implementation.
+		if ( UploadFromUrl::isEnabled() && UploadFromUrl::isAllowed( $this->getUser() ) === true ) {
+			$config['UploadFromUrl'] = true;
+		} else {
+			$config['UploadFromUrl'] = false;
+		}
 
 		$config['thanksLabel'] = $this->getPageContent( $config['thanksLabelPage'], true );
 
@@ -208,10 +214,10 @@ class SpecialUploadWizard extends SpecialPage {
 				array(
 					'UploadWizardConfig' => $config
 				) +
-				// Site name is a true global not specific to Upload Wizard
-				array(
-					'wgSiteName' => $wgSitename
-				)
+					// Site name is a true global not specific to Upload Wizard
+					array(
+						'wgSiteName' => $wgSitename
+					)
 			)
 		);
 	}
@@ -349,11 +355,15 @@ class SpecialUploadWizard extends SpecialPage {
 			}
 
 			return
-				Html::rawElement( 'div', array( 'id' => 'upload-wizard', 'class' => 'upload-section' ),
-					Html::rawElement( 'p', array( 'style' => 'text-align: center' ), wfMessage( 'mwe-upwiz-extension-disabled' )->text() )
-					. $linkHtml
+				Html::rawElement(
+					'div',
+					array( 'id' => 'upload-wizard', 'class' => 'upload-section' ),
+					Html::rawElement(
+						'p',
+						array( 'style' => 'text-align: center' ),
+						wfMessage( 'mwe-upwiz-extension-disabled' )->text()
+					) . $linkHtml
 				);
-
 		}
 
 		$tutorialHtml = '';
@@ -365,7 +375,7 @@ class SpecialUploadWizard extends SpecialPage {
 		// TODO move this into UploadWizard.js or some other javascript resource so the upload wizard
 		// can be dynamically included ( for example the add media wizard )
 		return
-		  '<div id="upload-wizard" class="upload-section">'
+			'<div id="upload-wizard" class="upload-section">'
 
 			// if loading takes > 2 seconds display spinner. Note we are evading Resource Loader here, and linking directly. Because we want an image to appear if RL's package is late.
 			// using some &nbsp;'s which is a bit of superstition, to make sure jQuery will hide this (it seems that it doesn't sometimes, when it has no content)
@@ -399,32 +409,41 @@ class SpecialUploadWizard extends SpecialPage {
 
 		.     '<div class="mwe-upwiz-stepdiv ui-helper-clearfix" id="mwe-upwiz-stepdiv-file" style="display:none;">'
 		.       '<div id="mwe-upwiz-files">'
+		.         '<div id="mwe-upwiz-flickr-select-list-container" class="ui-corner-all">'
+		.			'<div>' . $this->msg( 'mwe-upwiz-multi-file-select' )->text() . '</div>'
+		.			'<div id="mwe-upwiz-flickr-select-list"></div>'
+		.		  	'<button id="mwe-upwiz-select-flickr">' . $this->msg( "mwe-upwiz-add-file-0-free" )->text() . '</button>'
+		.		  '</div>'
 		.         '<div id="mwe-upwiz-filelist" class="ui-corner-all"></div>'
 		.         '<div id="mwe-upwiz-upload-ctrls" class="mwe-upwiz-file ui-helper-clearfix">'
-		.            '<div id="mwe-upwiz-add-file-container" class="mwe-upwiz-add-files-0">'
-		.              '<button id="mwe-upwiz-add-file">' . $this->msg( "mwe-upwiz-add-file-0-free" )->text() . '</button>'
-		.  	     '</div>'
-		.        '<div id="mwe-upwiz-upload-ctrl-container">'
-		.           '<button id="mwe-upwiz-upload-ctrl">' . $this->msg( "mwe-upwiz-upload" )->text() . '</button>'
+		.           '<div id="mwe-upwiz-add-file-container" class="mwe-upwiz-add-files-0">'
+		.             '<button id="mwe-upwiz-add-file">' . $this->msg( "mwe-upwiz-add-file-0-free" )->text() . '</button>'
+		.	          '<div id="mwe-upwiz-upload-ctrl-flickr-container">'
+		.		        '<p id="mwe-upwiz-upload-ctr-divide">' . $this->msg( "mwe-upwiz-add-flickr-or" )->text() . '</p>'
+		.		        '<button id="mwe-upwiz-upload-ctrl-flickr">' . $this->msg( "mwe-upwiz-add-file-flickr" )->text() . '</button>'
+		.	          '</div>'
+		.  	        '</div>'
+		.           '<div id="mwe-upwiz-upload-ctrl-container">'
+		.             '<button id="mwe-upwiz-upload-ctrl">' . $this->msg( "mwe-upwiz-upload" )->text() . '</button>'
+		.           '</div>'
 		.         '</div>'
-		.         '</div>'
+			.       '<div class="mwe-upwiz-buttons">'
+			.	   '<div class="mwe-upwiz-file-next-all-ok mwe-upwiz-file-endchoice">'
+			.             $this->msg( "mwe-upwiz-file-all-ok" )->text()
+			.             '<button class="mwe-upwiz-button-next">' . $this->msg( "mwe-upwiz-next-file" )->text()  . '</button>'
+			.          '</div>'
+			.	   '<div class="mwe-upwiz-file-next-some-failed mwe-upwiz-file-endchoice">'
+			.             $this->msg( "mwe-upwiz-file-some-failed" )->text()
+			.             '<button class="mwe-upwiz-button-retry">' . $this->msg( "mwe-upwiz-file-retry" )->text()  . '</button>'
+			.             '<button class="mwe-upwiz-button-next">' . $this->msg( "mwe-upwiz-next-file-despite-failures" )->text()  . '</button>'
+			.          '</div>'
+			.	   '<div class="mwe-upwiz-file-next-all-failed mwe-upwiz-file-endchoice">'
+			.             $this->msg( "mwe-upwiz-file-all-failed" )->text()
+			.             '<button class="mwe-upwiz-button-retry"> ' . $this->msg( "mwe-upwiz-file-retry" )->text()  . '</button>'
+			.          '</div>'
 		.         '<div id="mwe-upwiz-progress" class="ui-helper-clearfix"></div>'
 		.         '<div id="mwe-upwiz-continue" class="ui-helper-clearfix"></div>'
 		.       '</div>'
-		.       '<div class="mwe-upwiz-buttons">'
-		.	   '<div class="mwe-upwiz-file-next-all-ok mwe-upwiz-file-endchoice">'
-		.             $this->msg( "mwe-upwiz-file-all-ok" )->text()
-		.             '<button class="mwe-upwiz-button-next">' . $this->msg( "mwe-upwiz-next-file" )->text()  . '</button>'
-		.          '</div>'
-		.	   '<div class="mwe-upwiz-file-next-some-failed mwe-upwiz-file-endchoice">'
-		.             $this->msg( "mwe-upwiz-file-some-failed" )->text()
-		.             '<button class="mwe-upwiz-button-retry">' . $this->msg( "mwe-upwiz-file-retry" )->text()  . '</button>'
-		.             '<button class="mwe-upwiz-button-next">' . $this->msg( "mwe-upwiz-next-file-despite-failures" )->text()  . '</button>'
-		.          '</div>'
-		.	   '<div class="mwe-upwiz-file-next-all-failed mwe-upwiz-file-endchoice">'
-		.             $this->msg( "mwe-upwiz-file-all-failed" )->text()
-		.             '<button class="mwe-upwiz-button-retry"> ' . $this->msg( "mwe-upwiz-file-retry" )->text()  . '</button>'
-		.          '</div>'
 		.       '</div>'
 		.     '</div>'
 
@@ -433,7 +452,7 @@ class SpecialUploadWizard extends SpecialPage {
 		.       '<div id="mwe-upwiz-deeds" class="ui-helper-clearfix"></div>'
 		.       '<div id="mwe-upwiz-deeds-custom" class="ui-helper-clearfix"></div>'
 		.       '<div class="mwe-upwiz-buttons">'
-		.          '<button class="mwe-upwiz-button-next">' . $this->msg( "mwe-upwiz-next-deeds" )->text()  . '</button>'
+		.          '<button class="mwe-upwiz-button-next" style="display:none;">' . $this->msg( "mwe-upwiz-next-deeds" )->text()  . '</button>'
 		.       '</div>'
 		.     '</div>'
 
@@ -488,5 +507,3 @@ class UploadWizardSimpleForm extends UploadForm {
 	protected function addUploadJS( ) { }
 
 }
-
-

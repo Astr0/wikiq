@@ -144,7 +144,7 @@ mw.UploadWizardLicenseInput.prototype = {
 
 				$el.append( $input, $label, $j( '<br/>' ) );
 				// TODO add popup help?
-
+				$input.addClass( 'mwe-upwiz-copyright-info-radio' );
 				// this is so we can tell if a particular license ought to be set in setValues()
 				$input.data( 'licenseName', licenseName );
 
@@ -234,7 +234,7 @@ mw.UploadWizardLicenseInput.prototype = {
 		return $j( '<label />' )
 			.attr( { 'for': $input.attr('id') } )
 			.msg( messageKey, this.count || 0, licenseLink )
-			.append( $icons );
+			.append( $icons ).addClass( 'mwe-upwiz-copyright-info' );
 	},
 
 	/**
@@ -265,7 +265,7 @@ mw.UploadWizardLicenseInput.prototype = {
 				} );
 
 		var $button = $j( '<span></span>' )
-				.button( { label: gM( 'mwe-upwiz-license-custom-preview' ) } )
+				.button( { label: mw.msg( 'mwe-upwiz-license-custom-preview' ) } )
 				.css( { 'width': '8em' } )
 				.click( function() { _this.showPreview( $textarea.val() ); } );
 

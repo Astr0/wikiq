@@ -20,6 +20,8 @@ class UploadWizardHooks {
 				'jquery.ui.datepicker',
 				'jquery.ui.progressbar',
 				'jquery.spinner',
+				'jquery.ui.selectable',
+				'jquery.placeholder',
 				'jquery.suggestions',
 				'jquery.tipsy',
 				'jquery.ui.widget',
@@ -33,7 +35,6 @@ class UploadWizardHooks {
 				'mediawiki.api.edit',
 				'mediawiki.api.category',
 				'mediawiki.api.parse',
-				'mediawiki.api.titleblacklist',
 				'mediawiki.Title',
 				'mediawiki.user',
 				'mediawiki.feedback'
@@ -74,6 +75,9 @@ class UploadWizardHooks {
 				'resources/mw.Firefogg.js',
 				'resources/mw.FirefoggHandler.js',
 				'resources/mw.FirefoggTransport.js',
+
+				// flickr libraries
+				'resources/mw.FlickrChecker.js',
 
 				//upload using FormData, large files in chunks
 				'resources/mw.FormDataTransport.js',
@@ -161,9 +165,20 @@ class UploadWizardHooks {
 				'mwe-upwiz-help-desk',
 				'mwe-upwiz-add-file-n',
 				'mwe-upwiz-add-file-0-free',
+				'mwe-upwiz-flickr-input-placeholder',
+				'mwe-upwiz-add-flickr',
+				'mwe-upwiz-add-file-flickr',
+				'mwe-upwiz-add-file-flickr-n',
+				'mwe-upwiz-select-flickr',
+				'mwe-upwiz-flickr-disclaimer1',
+				'mwe-upwiz-flickr-disclaimer2',
 				'mwe-upwiz-browse',
 				'mwe-upwiz-transport-started',
+				'mwe-upwiz-encoding',
 				'mwe-upwiz-uploading',
+				'mwe-upwiz-queued',
+				'mwe-upwiz-assembling',
+				'mwe-upwiz-publish',
 				'mwe-upwiz-transported',
 				'mwe-upwiz-stashed-upload',
 				'mwe-upwiz-getting-metadata',
@@ -225,13 +240,13 @@ class UploadWizardHooks {
 				'mwe-upwiz-source-thirdparty',
 				'mwe-upwiz-source-thirdparty-intro',
 				'mwe-upwiz-source-thirdparty-custom-multiple-intro',
-				'mwe-upwiz-source-thirdparty-license',
 				'mwe-upwiz-source-thirdparty-cases',
 				'mwe-upwiz-source-thirdparty-accept',
 				'mwe-upwiz-source-custom',
 				'mwe-upwiz-more-options',
 				'mwe-upwiz-copy-metadata',
 				'mwe-upwiz-copy-metadata-button',
+				'mwe-upwiz-copied-metadata-button',
 				'mwe-upwiz-copy-title',
 				'mwe-upwiz-copy-description',
 				'mwe-upwiz-copy-date',
@@ -300,7 +315,6 @@ class UploadWizardHooks {
 				'mwe-upwiz-tooltip-location',
 				'mwe-upwiz-tooltip-more-info',
 				'mwe-upwiz-file-need-file',
-				'mwe-upwiz-deeds-need-deed',
 				'mwe-upwiz-deeds-need-license',
 				'mwe-upwiz-license-show-all',
 				'mwe-upwiz-license-show-recommended',
@@ -382,11 +396,12 @@ class UploadWizardHooks {
 				'mwe-upwiz-license-confirm-remove-title',
 				'mwe-upwiz-license-external',
 				'mwe-upwiz-license-external-invalid',
+				'mwe-upwiz-license-photoset-invalid',
+				'mwe-upwiz-url-invalid',
 				'mwe-upwiz-categories',
 				'mwe-upwiz-categories-add',
 				'mwe-upwiz-category-will-be-added',
 				'mwe-upwiz-category-remove',
-				'mwe-upwiz-thanks-caption',
 				'mwe-upwiz-thumbnail-failed',
 				'mwe-upwiz-unparseable-filename',
 				'mwe-upwiz-image-preview',
@@ -455,6 +470,14 @@ class UploadWizardHooks {
 				'mwe-upwiz-campaigns-confirm-delete',
 			),
 		),
+		'ext.uploadWizard.campaign' => array(
+			'scripts' => array(
+				'resources/ext.upwiz.campaign.js'
+			),
+			'dependencies' => array(
+				'jquery.ui.button',
+			),
+		),
 	);
 
 	/**
@@ -463,10 +486,13 @@ class UploadWizardHooks {
 	 * Adds modules to ResourceLoader
 	 */
 	public static function resourceLoaderRegisterModules( &$resourceLoader ) {
-		global $wgExtensionAssetsPath;
+		global $wgExtensionAssetsPath, $wgAPIModules;
 
 		$localpath = dirname( __FILE__ );
 		$remotepath = "$wgExtensionAssetsPath/UploadWizard";
+		if ( array_key_exists( 'titleblacklist', $wgAPIModules ) ) {
+			self::$modules['ext.uploadWizard']['dependencies'][] = 'mediawiki.api.titleblacklist';
+		}
 		foreach ( self::$modules as $name => $resources ) {
 			$resourceLoader->register( $name, new ResourceLoaderFileModule( $resources, $localpath, $remotepath ) );
 		}
@@ -536,6 +562,8 @@ class UploadWizardHooks {
 	 */
 	public static function onGetPreferences( User $user, array &$preferences ) {
 
+		$config = UploadWizardConfig::getConfig();
+
 		// User preference to skip the licensing tutorial, provided it's not globally disabled
 		if ( UploadWizardConfig::getSetting( 'skipTutorial' ) == false ) {
 			$preferences['upwiz_skiptutorial'] = array(
@@ -579,6 +607,22 @@ class UploadWizardHooks {
 					'section' => 'uploads/upwiz-experimental'
 				);
 			}
+		}
+
+		// Setting for maximum number of simultaneous uploads (always lower than the server-side config)
+		if ( $config[ 'maxSimultaneousConnections' ] > 1 ) {
+
+			// Hack to make the key and value the same otherwise options are added wrongly.
+			$range = range( 0, $config[ 'maxSimultaneousConnections' ] );
+			unset( $range[0] );
+
+			$preferences['upwiz_maxsimultaneous'] = array(
+				'type' => 'select',
+				'label-message' => 'mwe-upwiz-prefs-maxsimultaneous-upload',
+				'section' => 'uploads/upwiz-experimental',
+				'default' => $config[ 'maxSimultaneousConnections' ],
+				'options' => $range
+			);
 		}
 
 		return true;

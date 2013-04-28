@@ -20,7 +20,7 @@ mw.UploadWizardDescription = function( languageCode, required, initialValue ) {
 		fieldnameDiv.requiredFieldLabel();
 	}
 
-	fieldnameDiv.append( gM( 'mwe-upwiz-desc' ) ).addHint( 'description' );
+	fieldnameDiv.append( mw.msg( 'mwe-upwiz-desc' ) ).addHint( 'description' );
 
 	// Logic copied from MediaWiki:UploadForm.js
 	// Per request from Portuguese and Brazilian users, treat Brazilian Portuguese as Portuguese.
@@ -35,7 +35,6 @@ mw.UploadWizardDescription = function( languageCode, required, initialValue ) {
 	$j(_this.languageMenu).addClass( 'mwe-upwiz-desc-lang-select' );
 
 	_this.input = $j( '<textarea name="' + _this.id  + '" rows="2" cols="36" class="mwe-upwiz-desc-lang-text"></textarea>' )
-				.attr( 'title', gM( 'mwe-upwiz-tooltip-description' ) )
 				.growTextArea();
 
 	if ( initialValue !== undefined ) {
@@ -55,6 +54,14 @@ mw.UploadWizardDescription.prototype = {
 
 	getText: function() {
 		return $j.trim( $j( this.input ).val() );
+	},
+
+	setText: function( text ) {
+		// strip out any HTML tags
+		text = text.replace( /<[^>]+>/g, '' );
+		// & and " are escaped by Flickr, so we need to unescape
+		text = text.replace( /&amp;/g, '&' ).replace( /&quot;/g, '"' );
+		$j( this.input ).val( $j.trim( text ) );
 	},
 
 	getLanguage: function() {
@@ -92,9 +99,9 @@ mw.UploadWizardDescription.prototype = {
 			maxlength: mw.UploadWizard.config[  'maxDescriptionLength'  ],
 			required: required,
 			messages: {
-				required: gM( 'mwe-upwiz-error-blank' ),
-				minlength: gM( 'mwe-upwiz-error-too-short', mw.UploadWizard.config[  'minDescriptionLength'  ] ),
-				maxlength: gM( 'mwe-upwiz-error-too-long', mw.UploadWizard.config[  'maxDescriptionLength'  ] )
+				required: mw.msg( 'mwe-upwiz-error-blank' ),
+				minlength: mw.msg( 'mwe-upwiz-error-too-short', mw.UploadWizard.config[  'minDescriptionLength'  ] ),
+				maxlength: mw.msg( 'mwe-upwiz-error-too-long', mw.UploadWizard.config[  'maxDescriptionLength'  ] )
 			}
 		} );
 	}
