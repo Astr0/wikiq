@@ -52,3 +52,4 @@ require_once( "$IP/extensions/ContactPage/ContactPage.php" );
 $wgContactUser = 'Wiki';
 $wgContactSenderName = 'Contact Form on ' . $wgSitename;
 $wgCaptchaTriggers['contactpage'] = true;
+require_once( "$IP/extensions/InputBox/InputBox.php" );
