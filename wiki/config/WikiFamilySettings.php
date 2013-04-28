@@ -105,6 +105,8 @@ $wgDiff3 = "/usr/bin/diff3";
 # that value)
 $wgResourceLoaderMaxQueryLength = -1;
 
+# Enable AJAX
+$wgUseAjax = true;
 
 # To remove various skins from the User Preferences choices
 $wgSkipSkins = array("chick", "cologneblue", "myskin", "nostalgia", "simple", "standard", "modern", "monobook");
