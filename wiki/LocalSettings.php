@@ -17,8 +17,9 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 
 require_once( "$IP/config/WikiSubdomains.php" );
 
-if ( preg_match( '/^(.*)\.yourdomain.net$/', $server, $matches ) ) {
-	 $wikiconf = $wikiSubdomains[strtolower($matches[1])];	 
+$wikiconf = NULL;
+if ( preg_match( '/^(.*)\.wikiq.org$/', $_SERVER["SERVER_NAME"], $matches ) ) {
+	 $wikiconf = $wikiSubdomains[strtolower($matches[1])];
 } 
 
 if (isset($wikiconf)) {
@@ -31,8 +32,10 @@ if (isset($wikiconf)) {
 	# Site language code, should be one of the list in ./languages/Names.php
 	$wgLanguageCode = $wikiconf["language"];
 } else {
-     die( "Invalid host name, can't determine wiki name" );
-     // You could also redirect to a nicer "No such wiki" page.
+	header('Location: http://wikiq.org');
+	exit();
+    //die( "Invalid host name, can't determine wiki name" );
+    // You could also redirect to a nicer "No such wiki" page.
 }
 
 # Shared configuration
