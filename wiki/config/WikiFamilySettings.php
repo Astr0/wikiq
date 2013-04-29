@@ -37,6 +37,14 @@ $wgDBserver         = "localhost";
 $wgSharedDB         = 'wiki_pool';
 $wgCookieDomain     = '.wikiq.org';
 
+
+$wgUseSharedUploads = true;
+$wgSharedUploadDBname = "wiki_pool";
+$wgSharedUploadDirectory = "{$IP}/images/";
+$wgSharedUploadPath = 'http://pool.wikiq.org/images';
+$wgFetchCommonsDescriptions = true;
+$wgRepositoryBaseUrl = "http://pool.wikiq.org/wiki/Image:";
+
 # MySQL specific settings
 $wgDBprefix         = "";
 
@@ -113,3 +121,4 @@ $wgSkipSkins = array("chick", "cologneblue", "myskin", "nostalgia", "simple", "s
 
 // Needed to make UploadWizard work in IE, see bug 39877
 $wgApiFrameOptions = 'SAMEORIGIN';
+
