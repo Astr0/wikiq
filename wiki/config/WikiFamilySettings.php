@@ -73,6 +73,7 @@ $wgSquidMaxage=2678400;
 $wgEnableUploads  = ($wikiname === "pool");
 $wgUseImageMagick = true;
 $wgImageMagickConvertCommand = "/usr/bin/convert";
+$wgUploadNavigationUrl = '//pool.wikiq.org/wiki/Special:UploadWizard?uselang='.$wikiconf["language"];
 
 
 ## If you use ImageMagick (or any other shell command) on a

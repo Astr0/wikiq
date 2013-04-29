@@ -56,6 +56,5 @@ require_once( "$IP/extensions/InputBox/InputBox.php" );
 
 if ($wikiname = "pool") {
 	require_once( "$IP/extensions/UploadWizard/UploadWizard.php" );
-	$wgUploadNavigationUrl = 'http://pool.wikiq.org/wiki/Special:UploadWizard';
 	$wgUploadWizardConfig['altUploadForm'] = 'Special:Upload';
 }
