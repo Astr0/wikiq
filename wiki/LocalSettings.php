@@ -19,7 +19,8 @@ require_once( "$IP/config/WikiSubdomains.php" );
 
 $wikiconf = NULL;
 if ( preg_match( '/^(.*)\.wikiq.org$/', $_SERVER["SERVER_NAME"], $matches ) ) {
-	 $wikiconf = $wikiSubdomains[strtolower($matches[1])];
+	 $wikiname = strtolower($matches[1]);
+	 $wikiconf = $wikiSubdomains[$wikiname];
 } 
 
 if (isset($wikiconf)) {

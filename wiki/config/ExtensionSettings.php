@@ -54,9 +54,8 @@ $wgContactSenderName = 'Contact Form on ' . $wgSitename;
 $wgCaptchaTriggers['contactpage'] = true;
 require_once( "$IP/extensions/InputBox/InputBox.php" );
 
-require_once( "$IP/extensions/UploadWizard/UploadWizard.php" );
-$wgExtensionFunctions[] = function() {
-        $GLOBALS['wgUploadNavigationUrl'] = SpecialPage::getTitleFor( 'UploadWizard' )->getLocalURL();
-        return true;
-};
-$wgUploadWizardConfig['altUploadForm'] = 'Special:Upload';
+if ($wikiname = "pool") {
+	require_once( "$IP/extensions/UploadWizard/UploadWizard.php" );
+	$wgUploadNavigationUrl = 'http://pool.wikiq.org/wiki/Special:UploadWizard';
+	$wgUploadWizardConfig['altUploadForm'] = 'Special:Upload';
+}

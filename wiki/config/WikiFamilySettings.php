@@ -70,7 +70,7 @@ $wgSquidMaxage=2678400;
 
 ## To enable image uploads, make sure the 'images' directory
 ## is writable, then set this to true:
-$wgEnableUploads  = true;
+$wgEnableUploads  = ($wikiname === "pool");
 $wgUseImageMagick = true;
 $wgImageMagickConvertCommand = "/usr/bin/convert";
 
