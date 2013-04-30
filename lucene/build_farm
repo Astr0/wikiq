@@ -1,6 +1,9 @@
 #!/bin/bash
 
-source ./config.inc
+hostname=CentOS-63-64-minimal
+indexes=/var/www/wikiq/lucene/indexes
+mediawiki=/var/www/wikiq/wiki
+base=/var/www/wikiq/lucene
 
 for dbname in wiki_pool wiki_en wiki_ua wiki_ru
 do
