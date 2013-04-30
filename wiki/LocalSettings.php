@@ -18,10 +18,32 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 require_once( "$IP/config/WikiSubdomains.php" );
 
 $wikiconf = NULL;
-if ( preg_match( '/^(.*)\.wikiq.org$/', $_SERVER["SERVER_NAME"], $matches ) ) {
+$wikiname = NULL;
+if ( isset($_SERVER["SERVER_NAME"]) && preg_match( '/^(.*)\.wikiq.org$/', $_SERVER["SERVER_NAME"], $matches ) ) {
 	 $wikiname = strtolower($matches[1]);
 	 $wikiconf = $wikiSubdomains[$wikiname];
-} 
+} else {	
+	$dbname = '';
+	# The --wiki param must the second argument to to avoid
+	# any "options with args" ambiguity (see Maintenance.php).
+	if ( isset( $argv[1] ) && $argv[1] === '--wiki' ) {
+		$dbname = isset( $argv[2] ) ? $argv[2] : ''; // "script.php --wiki dbname"
+	} elseif ( isset( $argv[1] ) && substr( $argv[1], 0, 7 ) === '--wiki=' ) {
+		$dbname = substr( $argv[1], 7 ); // "script.php --wiki=dbname"
+	} elseif ( isset( $argv[1] ) && substr( $argv[1], 0, 2 ) !== '--' ) {
+		$dbname = $argv[1]; // "script.php dbname"
+	}
+	if ($dbname !== '') {	
+		foreach ($wikiSubdomains as $wSubName => $wSubValue) {
+			if ($wSubValue["db"] === $dbname) {
+				$wikiname = $wSubName;
+				$wikiconf = $wSubValue;
+				break;
+			}
+		}
+	}
+}
+
 
 if (isset($wikiconf)) {
 	# Site name
