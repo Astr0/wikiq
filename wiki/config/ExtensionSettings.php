@@ -58,3 +58,15 @@ if ($wikiname = "pool") {
 	require_once( "$IP/extensions/UploadWizard/UploadWizard.php" );
 	$wgUploadWizardConfig['altUploadForm'] = 'Special:Upload';
 }
+
+$wgSearchType = 'LuceneSearch';
+$wgLuceneHost = '78.47.36.237'; #IP address of server
+$wgLucenePort = 8123;
+require_once( "$IP/extensions/MWSearch/MWSearch.php" );
+
+$wgEnableLucenePrefixSearch = true;
+$wgLucenePrefixHost = '78.47.36.237';
+ 
+# comment this out if you are using the old version 2.0
+# (MUST be AFTER the require_once!)
+$wgLuceneSearchVersion = 2.1;
