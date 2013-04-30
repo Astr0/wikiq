@@ -56,6 +56,7 @@ if (isset($wikiconf)) {
 	$wgLanguageCode = $wikiconf["language"];
 } else {
 	header('Location: http://wikiq.org');
+	echo "No database information";
 	exit();
     //die( "Invalid host name, can't determine wiki name" );
     // You could also redirect to a nicer "No such wiki" page.
