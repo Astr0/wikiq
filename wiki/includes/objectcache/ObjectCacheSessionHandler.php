@@ -62,7 +62,8 @@ class ObjectCacheSessionHandler {
 	 * @return String: cache key
 	 */
 	static function getKey( $id ) {
-		if ($wgSessionDb)
+		global $wgSessionDb;
+		if (isset($wgSessionDb))
 			return wfForeignMemcKey($wgSessionDb, false, 'session', $id);
 		return wfMemcKey( 'session', $id );
 	}
