@@ -59,9 +59,11 @@ $wgDBmysql5 = false;
 $wgMainCacheType = CACHE_MEMCACHED;
 $wgParserCacheType = CACHE_MEMCACHED; # optional
 $wgMessageCacheType = CACHE_MEMCACHED; # optional
+$wgSessionCacheType = CACHE_MEMCACHED;
 $wgMemCachedServers = array( "127.0.0.1:11211" );
  
-$wgSessionsInMemcached = true;
+$wgSessionDb = "wiki_pool";
+$wgSessionsInObjectCache = true;
 
 ## Squid settings
 $wgUseSquid = true;
