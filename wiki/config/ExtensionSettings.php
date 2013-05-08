@@ -21,7 +21,7 @@ require_once( "$IP/extensions/CategoryTree/CategoryTree.php" );
 require_once( "$IP/extensions/CheckUser/CheckUser.php" );
 require_once( "$IP/extensions/Interwiki/Interwiki.php" );
 // To grant sysops permissions to edit interwiki data
-# $wgGroupPermissions['sysop']['interwiki'] = true;
+$wgGroupPermissions['sysop']['interwiki'] = true;
 require_once( "$IP/extensions/TemplateSandbox/TemplateSandbox.php" );
 require_once( "$IP/extensions/AntiSpoof/AntiSpoof.php" );
 $wgSharedTables[] = 'spoofuser';
